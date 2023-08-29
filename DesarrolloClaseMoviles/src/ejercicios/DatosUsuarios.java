@@ -1,16 +1,17 @@
 package ejercicios;
 
 /*
-* Crear un programa que almacene los datos de usuarios,
-* que imprima los datos y permita almacenar nuevos datos.
-* los datos a almacenar seran: nombre, edad, correo
-* */
+ * Crear un programa que almacene los datos de usuarios,
+ * que imprima los datos y permita almacenar nuevos datos.
+ * los datos a almacenar seran: nombre, edad, correo
+ * */
 
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class DatosUsuarios {
     static Scanner read = new Scanner(System.in);
+
     public static void main(String[] args) {
         ArrayList<String[]> usuarios = new ArrayList<>();
         boolean exit = true;
@@ -18,6 +19,7 @@ public class DatosUsuarios {
         System.out.println("****** BIEVENIDO ******");
 
         do {
+            System.out.println();
             System.out.println("Ingrese la opción deseada: ");
             System.out.println("1. Nuevo usuario");
             System.out.println("2. Datos de usuario especifico");
@@ -26,16 +28,20 @@ public class DatosUsuarios {
             String opc = read.next();
             read.skip("\n");
 
-            switch (opc){
+            switch (opc) {
                 case "1":
+                    System.out.println();
                     System.out.println("Ingrese el nombre del nuevo usuario");
                     String name = read.nextLine();
+                    System.out.println();
                     System.out.println("Ingrese la edad del nuevo usuario");
                     String age = read.nextLine();
+                    System.out.println();
                     System.out.println("Ingrese el email del nuevo usuario");
                     String email = read.nextLine();
+                    System.out.println();
 
-                    String[] usuario = {name,age,email};
+                    String[] usuario = {name, age, email};
 
                     usuarios.add(usuario);
 
@@ -49,20 +55,20 @@ public class DatosUsuarios {
                     String[] userfound = new String[3];
 
                     for (String[] user : usuarios) {
-                        if (user[0].equals(nameUser)){
+                        if (user[0].equalsIgnoreCase(nameUser)) {
                             encontrado = true;
                             userfound = user;
                             break;
                         }
 
-                        if (encontrado){
-                            System.out.println("Nombre: " + userfound[0]);
-                            System.out.println("Edad: " + userfound[1]);
-                            System.out.println("Email: " + userfound[2]);
-                        } else {
-                            System.out.println("El usario buscado no existe");
-                        }
 
+                    }
+
+                    if (encontrado) {
+                        System.out.println("[ Nombre: " + userfound[0] + ", Edad:" + userfound[1] + ", Email:" + userfound[2] + " ]");
+                        System.out.println();
+                    } else {
+                        System.out.println("El usario buscado no existe");
                     }
 
                     break;
@@ -70,10 +76,8 @@ public class DatosUsuarios {
                 case "3":
                     int i = 1;
                     for (String[] user : usuarios) {
-                        System.out.println("Usuario " + i + ": ");
-                        System.out.println("Nombre: " + user[0]);
-                        System.out.println("Edad: " + user[1]);
-                        System.out.println("Email: " + user[2]);
+                        System.out.println("Usuario " + i + ": " + "[ Nombre: " + user[0] + ", Edad:" + user[1] + ", Email:" + user[2] + " ]");
+                        System.out.println();
                         i++;
                     }
 
@@ -87,6 +91,6 @@ public class DatosUsuarios {
                     System.out.println("Opción seleccionada no válida");
                     break;
             }
-        }while(exit);
+        } while (exit);
     }
 }
