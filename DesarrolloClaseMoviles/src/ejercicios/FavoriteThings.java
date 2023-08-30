@@ -50,6 +50,7 @@ public class FavoriteThings {
     }
 
     //metodo para imprimir la libreria
+
     public static void show() {
         System.out.println();
         int i = 1;

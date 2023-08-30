@@ -2,6 +2,8 @@ package com.cesde.moneybalanceprogram.services;
 
 import com.cesde.moneybalanceprogram.entities.Account;
 
+import java.time.LocalDateTime;
+import java.time.chrono.ChronoLocalDateTime;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -12,6 +14,8 @@ public class AccountService {
     static Scanner read = new Scanner(System.in);
 
     static Account account = new Account();
+    static String[] files;
+    static ArrayList<String[]> statement = new ArrayList<>();
     int incoCounter = 0, egresCounter = 0;
 
     //Metodo para iniciar el programa
@@ -25,18 +29,19 @@ public class AccountService {
             System.out.println("1. Ingreso");
             System.out.println("2. Egreso");
             System.out.println("3. Balance actual");
-            System.out.println("4. Salir");
+            System.out.println("4. Estracto de la cuenta");
+            System.out.println("5. Salir");
             String opc = read.next();
 
             switch (opc){
                 case "1":
-                    income();
+                    transation("income");
                     incoCounter++;
                     exit = true;
                     break;
 
                 case "2":
-                    egress();
+                    transation("egress");
                     egresCounter++;
                     exit = true;
                     break;
@@ -47,6 +52,10 @@ public class AccountService {
                     break;
 
                 case "4":
+                    inform();
+                    break;
+
+                case "5":
                     System.out.println(" ************ PROGRAMA TERMINADO ************ ");
                     exit = false;
                     break;
@@ -62,9 +71,16 @@ public class AccountService {
 
     }
 
-    public void income(){
+    public void transation(String option){
         Double money;
-        ArrayList<Double> incomes = account.getIncome();
+        files = new String[3];
+        ArrayList<Double> transactions = new ArrayList<>();
+        if (option.equals("income")){
+            transactions = account.getIncome();
+        } else if (option.equals("egress")){
+            transactions = account.getEgress();
+        }
+
         exit = true;
         do {
             try {
@@ -79,29 +95,29 @@ public class AccountService {
             }
         }while (exit);
 
-        incomes.add(money);
-        account.setIncome(incomes);
-    }
+        LocalDateTime times = LocalDateTime.now();
 
-    public void egress(){
-        Double money;
-        ArrayList<Double> egresses = account.getEgress();
-        exit = true;
-        do {
-            try {
-                System.out.println("Ingrese el valor del egreso a la cuenta");
-                money = read.nextDouble();
-                exit = false;
-                read.skip("\n");
-            } catch (InputMismatchException e){
-                System.out.println("Solo se admiten valores numericos");
-                money = 0.0;
-                exit = true;
-            }
-        }while (exit);
+        String date = "------> [ "
+                + String.valueOf(times.getDayOfMonth())
+                + String.valueOf(times.getMonthValue())
+                + String.valueOf(times.getYear())
+                + " --- "
+                + String.valueOf(times.getHour())
+                + String.valueOf(times.getMinute())
+                + String.valueOf(times.getSecond()) + " ]";
 
-        egresses.add(money);
-        account.setEgress(egresses);
+        files[0] = date;
+        files[1] = option;
+        files[2] = money.toString();
+
+        statement.add(files);
+        transactions.add(money);
+
+        if(option.equals("income")){
+            account.setIncome(transactions);
+        } else if(option.equals("egress")){
+            account.setEgress(transactions);
+        }
     }
 
     public Double balance(){
@@ -123,4 +139,9 @@ public class AccountService {
         return sumIncome - sumEgress;
     }
 
+    public void inform(){
+        for (String[] r : statement){
+            System.out.println("-----> [ Fecha: " + r[0] + ", Transacción: " + r[1] + ", Valor: " + r[2] + " ]" );
+        }
+    }
 }
