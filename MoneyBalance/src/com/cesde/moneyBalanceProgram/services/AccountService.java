@@ -3,7 +3,6 @@ package com.cesde.moneybalanceprogram.services;
 import com.cesde.moneybalanceprogram.entities.Account;
 
 import java.time.LocalDateTime;
-import java.time.chrono.ChronoLocalDateTime;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -25,12 +24,14 @@ public class AccountService {
         System.out.println();
 
         do {
+            System.out.println();
             System.out.println("Ingrese la opción deseada");
             System.out.println("1. Ingreso");
             System.out.println("2. Egreso");
             System.out.println("3. Balance actual");
             System.out.println("4. Estracto de la cuenta");
             System.out.println("5. Salir");
+            System.out.println();
             String opc = read.next();
 
             switch (opc){
@@ -47,12 +48,14 @@ public class AccountService {
                     break;
 
                 case "3":
-                    System.out.println("El balance actual de la cuenta es: " + balance());;
+                    System.out.println("El balance actual de la cuenta es: " + balance());
+                    System.out.println();
                     exit = true;
                     break;
 
                 case "4":
                     inform();
+                    exit = true;
                     break;
 
                 case "5":
@@ -84,27 +87,24 @@ public class AccountService {
         exit = true;
         do {
             try {
-                System.out.println("Ingrese el valor a ingresar a la cuenta");
+                System.out.println("Ingrese el valor");
                 money = read.nextDouble();
                 exit = false;
-                read.skip("\n");
             } catch (InputMismatchException e){
                 System.out.println("Solo se admiten valores numericos");
                 money = 0.0;
                 exit = true;
+                read.next();
             }
+
         }while (exit);
 
         LocalDateTime times = LocalDateTime.now();
 
-        String date = "------> [ "
-                + String.valueOf(times.getDayOfMonth())
-                + String.valueOf(times.getMonthValue())
-                + String.valueOf(times.getYear())
-                + " --- "
-                + String.valueOf(times.getHour())
-                + String.valueOf(times.getMinute())
-                + String.valueOf(times.getSecond()) + " ]";
+        String date = times.toLocalDate().toString() + " -- Hora: "
+                +  times.toLocalTime().getHour() + ":"
+                + times.toLocalTime().getMinute() + ":"
+                + times.toLocalTime().getSecond();
 
         files[0] = date;
         files[1] = option;
@@ -121,7 +121,6 @@ public class AccountService {
     }
 
     public Double balance(){
-        Double balanceFinal = 0.0;
         Double sumIncome = 0.0;
         Double sumEgress = 0.0;
 
@@ -141,7 +140,8 @@ public class AccountService {
 
     public void inform(){
         for (String[] r : statement){
-            System.out.println("-----> [ Fecha: " + r[0] + ", Transacción: " + r[1] + ", Valor: " + r[2] + " ]" );
+            System.out.println("*** [ Fecha: " + r[0] + ", Transacción: " + r[1] + ", Valor: " + r[2] + " ]" );
         }
+        System.out.println();
     }
 }
